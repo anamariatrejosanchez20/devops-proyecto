@@ -17,3 +17,4 @@ def dividir(a, b):
             "Proporciona un número distinto de 0."
         )
     return a / b
+# Función de potencia (TODO)
