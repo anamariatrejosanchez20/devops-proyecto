@@ -1,19 +1,12 @@
 name: Terraform IaC
 
 on:
-  workflow_dispatch:
-
   push:
     branches: [main]
-    paths:
-      - 'terraform/**'
-      - '.github/workflows/terraform.yml'
-
+    paths: ['terraform/**']
   pull_request:
     branches: [main]
-    paths:
-      - 'terraform/**'
-      - '.github/workflows/terraform.yml'
+    paths: ['terraform/**']
 
 permissions:
   contents: read
@@ -23,29 +16,27 @@ jobs:
   terraform:
     name: Plan y Apply
     runs-on: ubuntu-latest
-    env:
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
     steps:
-      - name: Clonar repositorio
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Configurar Terraform
-        uses: hashicorp/setup-terraform@v4
+      - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.6.0"
 
       - name: Login en Azure
-        uses: azure/login@v3
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Terraform Init
         working-directory: terraform
         run: terraform init
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
       - name: Terraform Format Check
         working-directory: terraform
