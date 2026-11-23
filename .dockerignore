@@ -26,5 +26,17 @@ azure-pipelines.yml
 *.md
 docs/
 
-# Tests (si se quiere imagen de producción sin tests)
+# Terraform
+terraform/
+.terraform/
+**/.terraform/
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/.terraform.lock.hcl
+
+# Reportes locales
+trivy-report.json
+
+# Tests
 # tests/  <- Comentado: en el curso incluimos tests en la imagen
