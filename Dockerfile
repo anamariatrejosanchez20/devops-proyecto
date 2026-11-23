@@ -18,15 +18,18 @@ USER appuser
 RUN pytest tests/ -v
 
 # Stage 2: Runtime - Nginx
-FROM nginx:1.25-alpine
+FROM nginx:stable-alpine
 
 LABEL maintainer="devops-academia"
 LABEL description="App calculadora - Nginx runtime"
 
+# Actualizar paquetes de seguridad
+RUN apk update && apk upgrade --no-cache
+
 # Crear usuario no root
 RUN adduser -D -u 1000 appuser
 
-# Copiar contenido de la app si necesitas servir HTML/JS
+# Copiar contenido de la app
 COPY --from=builder /app /usr/share/nginx/html
 
 EXPOSE 80
@@ -34,4 +37,3 @@ EXPOSE 80
 USER appuser
 
 CMD ["nginx", "-g", "daemon off;"]
- 
